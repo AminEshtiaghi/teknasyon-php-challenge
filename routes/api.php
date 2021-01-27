@@ -1,19 +1,23 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\APIController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::prefix('mock')->group(function () {
+    include'mock/apple.php';
+    include'mock/google.php';
+});
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('v1')->group(function ()  {
+
+    Route::post('register', [APIController::class, 'register'])
+        ->name('api.register');
+    Route::post('purchase', [APIController::class, 'purchase'])
+        ->name('api.purchase');
+    Route::get('check', [APIController::class, 'check'])
+        ->name('api.check');
+
+    Route::get('report', [APIController::class, 'report'])
+        ->name('api.report');
+
 });

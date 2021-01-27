@@ -1,62 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
-
 <p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+    <a href="https://teknasyon.com" target="_blank">
+        <img src="https://teknasyon.com/content/assets/img/logo/teknasyon-logo@2x.png" width="250">
+    </a>
 </p>
 
-## About Laravel
+## PHP Challenge
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+In this PHP challenge, we have an API application which is responsible to **register** devices on this system. managing their **subscriptions** on the applications and **checking** subscription status on demand. 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Also, this application contains a **worker** which is responsible to extend subscriptions of applications when their expiration time has been reached.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The other feature of this applications is the **events** part which are responsible to inform a third party whenever each one of devices **subscribe**(new) or **extend**(renew) their subscription or even **cancel** it.
 
-## Learning Laravel
+Finally, there is an API in order to represent a report over to present final status of all subscription in following status of "**New**", "**Expired**" and "**Renewed**".
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#### Data Models
+You can see this application data model via following link on draw.io.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### Running Application
+You will be able to run this application with 2 different method of:
+- using **Docker**
+- using **artisan** (server)
 
-## Laravel Sponsors
+Before starting each of these two method, you should run ``composer install`` and then:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+##### Using Docker
+In order to run development environment, go to root directory and run following command in terminal:
 
-### Premium Partners
+``bash build.sh``
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+The bash code has been written in the way to run migrate command immediately after running environment by itself. By finishing work of this environment, you can run following command to destroy built images:
 
-## Contributing
+``bash destroy.sh`` 
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+##### Using Artisan
+###### Create Database
+Firstly, it is needed to create a database exactly based on .env file configuration file.
+- Database name: teknasyon
+- Database username: root
+- Database password: docker
 
-## Code of Conduct
+(you can change these configuration files and use the values you prefer).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+###### Migrate Database
+Secondly, you should run following command in order to have the database ready to work before running your web engine.
 
-## Security Vulnerabilities
+``php artisan migrate``
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+###### Serve Web Engine
+Finally, you can serve the web engine by running following command in the terminal:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+``php artisan serve``
+
+#### API 
+##### Register
+[http://localhost:8000/api/v1/register](http://localhost:8000/api/v1/register)
+
+This is a POST method and require following parameter in its body when you are sending request to it.
+- **u_id** (UID) which is an integer number.
+- **app_id** (AppID) which is an integer number.
+- **lang** which is a  string value, represented as the language of application.
+- **os** which can be one of two values of "ios" or "android"
+
+Sample:
+{
+    "u_id": 1,
+    "app_id": 3,
+    "lang": "tr",
+    "os": "ios"
+}
+
+The method will return a json body in its response which include of following parameter:
+- **result** which will be one of "OK" or "NOK" values, when  it  is "OK", it means the API works successfully and when the result is "NOK", means something went wrong.
+- **message** which always include a text message to explain what happened during of executing API call.
+- **client_token** which is the unique Client Token related to this UID and AppID, please note that this *TOKEN* will be used in the next steps.
+
+Sample: 
+{
+    "result": "OK",
+    "message": "the device successfully has been added to the DB",
+    "client_token": "6623bbd9-49ed-4127-a23b-a50c84b69a9d"
+}
+
+##### Purchase
+[http://localhost:8000/api/v1/purchase](http://localhost:8000/api/v1/purchase)
+
+This is a POST method and require following parameter in its body when you are sending request to it.
+- **client_token** which is an UUID parameter retrieved from [Register] API previously.
+- **receipt** which is a hash string parameter representing all the receipt data in the hashed code.
+
