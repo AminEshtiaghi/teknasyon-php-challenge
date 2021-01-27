@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Subscription;
+use Cache;
 use DB;
 
 class ReportService
@@ -11,6 +12,16 @@ class ReportService
     const COLUMN_COUNT_RAW = 'count(1) `count`';
 
     public static function get(): array
+    {
+        $cacheKey = 'report:all';
+        return Cache::remember($cacheKey, 60, function () {
+
+            return self::getFromDB();
+
+        });
+    }
+
+    private static function getFromDB(): array
     {
         $result = [
             Subscription::STATUS_NEW => 0,

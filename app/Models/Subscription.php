@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\CanceledSubscriptionEvent;
 use App\Events\RenewedSubscriptionEvent;
 use App\Events\StartedSubscriptionEvent;
 use App\Exceptions\RateLimitException;
@@ -183,13 +184,27 @@ class Subscription extends BaseModel
 
     protected function onCreating(BaseModel $baseModel)
     {
+        $baseModel = parent::onCreating($baseModel);
         StartedSubscriptionEvent::dispatch($this);
-        return parent::onCreating($baseModel);
+
+        return $baseModel;
     }
 
     protected function onUpdating(BaseModel $baseModel)
     {
-        RenewedSubscriptionEvent::dispatch($this);
-        return parent::onUpdating($baseModel);
+        $baseModel = parent::onUpdating($baseModel);
+
+        switch ($this->getStatus()) {
+            case self::STATUS_RENEWED:
+                RenewedSubscriptionEvent::dispatch($this);
+                break;
+
+            case self::STATUS_EXPIRED:
+            case self::STATUS_CANCELED:
+                CanceledSubscriptionEvent::dispatch($this);
+                break;
+        }
+
+        return $baseModel;
     }
 }

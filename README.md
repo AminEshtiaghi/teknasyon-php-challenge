@@ -130,3 +130,18 @@ If you are running application on a docker run:
 else do this:
 ``php artisan worker:run``
 
+#### CALL BACK
+On each change of subscriptions status, one of the following events will be raised automatically. the listener will be pushed in the queue then a consumer will pick them one by one and execute them after.
+
+For testing purpose, If you are running application on a docker, please run following command on your terminal:
+``bash queue.sh``
+
+else do this:
+``php artisan queue:work``
+
+***Please Note*** that in production a cron job will run laravel scheduler each minutes and a supervisor service will consume all the queued items automatically, so running previous command is only for the test purposes.
+
+#### REPORTING
+To have simple report, you use following link to see the report result in a json format, please note that the results are cached for 1 minutes, so it means you will have 1 minute dirty data on each request of report end-point.
+
+[http://localhost:8000/api/v1/report](http://localhost:8000/api/v1/report)
