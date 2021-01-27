@@ -16,11 +16,16 @@ class CreateDevicesTable extends Migration
     {
         Schema::create(Device::TABLE, function (Blueprint $table) {
             $table->id();
-            $table->uuid(Device::COLUMN_CLIENT_TOKEN);
-            $table->integer(Device::COLUMN_U_ID, false, true);
-            $table->integer(Device::COLUMN_APP_ID, false, true);
-            $table->string(Device::COLUMN_LANG, '25');
-            $table->enum(Device::COLUMN_OS, Device::OSES);
+            $table->uuid(Device::COLUMN_CLIENT_TOKEN)
+                ->nullable(false);
+            $table->integer(Device::COLUMN_U_ID, false, true)
+                ->nullable(false);
+            $table->integer(Device::COLUMN_APP_ID, false, true)
+                ->nullable(false);
+            $table->string(Device::COLUMN_LANG, '25')
+                ->nullable(false);
+            $table->enum(Device::COLUMN_OS, Device::OSES)
+                ->nullable(false);
             $table->timestamps();
 
             $uniqueClientTokenIndex = 'u_' . Device::TABLE . '_' . Device::COLUMN_CLIENT_TOKEN;

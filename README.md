@@ -88,5 +88,45 @@ Sample:
 
 This is a POST method and require following parameter in its body when you are sending request to it.
 - **client_token** which is an UUID parameter retrieved from [Register] API previously.
-- **receipt** which is a hash string parameter representing all the receipt data in the hashed code.
+- **receipt** which is a hashed string parameter representing all the receipt data in the hashed code.
+
+Sample:
+{
+    "client_token": "6623bbd9-49ed-4127-a23b-a50c84b69a9d",
+    "receipt": "aab206e2dd33aecd3bdfd3308e7ed1c1"
+}
+
+
+The method will return a json body in its response which include of following parameter:
+- **result** which will be one of "OK" or "NOK" values, when  it  is "OK", it means the API works successfully and when the result is "NOK", means something went wrong.
+- **message** which always include a text message to explain what happened during of executing API call.
+
+Sample: 
+{
+    "result": "OK",
+    "message": "subscription for 6623bbd9-49ed-4127-a23b-a50c84b69a9d successfully registered till 2021-05-16 22:01:07"
+}
+
+##### Check
+[http://localhost:8000/api/v1/check](http://localhost:8000/api/v1/check)
+This is a GET method and require only client token in its query string when you are sending request to it.
+- **client_token** which is an UUID parameter retrieved from [Register] API previously.
+
+Sample:
+[http://localhost:8000/api/v1/check?client_token=6623bbd9-49ed-4127-a23b-a50c84b69a9d](http://localhost:8000/api/v1/check?client_token=6623bbd9-49ed-4127-a23b-a50c84b69a9d)
+
+The method will return a json body in its response which include of following parameter:
+- **result** which will be one of "OK" or "NOK" values, when  it  is "OK", it means the API works successfully and when the result is "NOK", means something went wrong.
+- **status** which represent current status of that client token.
+
+#### WORKER
+The worker is inherited from Laravel command class, located in Console\Commands\WorkerCommand.php, this command is running every night at **00:30** by a cron job which is calling Laravel console kernel every minutes.
+
+For testing purpose, you can run following command in terminal:
+
+If you are running application on a docker run:
+``bash worker.sh``
+
+else do this:
+``php artisan worker:run``
 

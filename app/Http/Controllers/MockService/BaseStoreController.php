@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class BaseStoreController extends BaseController
 {
     const UTC = 'UTC';
-    const UT6 = 'UTC6';
+    const UTCm6 = 'Pacific/Easter';
 
     /**
      * @param string $receipt

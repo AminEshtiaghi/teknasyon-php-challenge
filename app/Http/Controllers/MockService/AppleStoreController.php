@@ -15,7 +15,7 @@ class AppleStoreController extends BaseStoreController
             $result = $this->doDummyVerification($receipt);
 
             return $this->jsonResponse(
-                $this->returnResult($result, self::UT6)
+                $this->returnResult($result, self::UTCm6)
             );
 
         } catch (RateLimitException $exception) {

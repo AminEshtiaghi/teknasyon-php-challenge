@@ -33,8 +33,11 @@ class WorkerCommand extends Command
 
             if ($subscriptions->count() > 0) {
 
+                /** @var Subscription $subscription */
                 foreach ($subscriptions as $subscription) {
                     RenewSubscriptionJob::dispatch($subscription);
+                    $this->info($subscription->getClientToken().' has been dispatched!');
+
                 }
 
             }

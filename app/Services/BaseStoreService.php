@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class BaseStoreService
 {
     const UTC = 'UTC';
-    const UT6 = 'UTC6';
+    const UTCm6 = 'Pacific/Easter';
 
     /**
      * @param string $endpoint

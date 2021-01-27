@@ -6,6 +6,7 @@ use App\Http\Controllers\APIController;
 Route::prefix('mock')->group(function () {
     include'mock/apple.php';
     include'mock/google.php';
+    include'mock/third-party.php';
 });
 
 Route::prefix('v1')->group(function ()  {

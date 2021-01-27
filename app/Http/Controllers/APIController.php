@@ -200,7 +200,7 @@ class APIController extends BaseController
             Subscription::COLUMN_RECEIPT => [
                 'required',
                 'string',
-                'min:255',
+                'min:25',
                 'max:255',
             ]
         ];

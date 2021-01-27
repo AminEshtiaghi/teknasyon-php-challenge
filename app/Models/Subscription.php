@@ -99,9 +99,11 @@ class Subscription extends BaseModel
                 ->setReceipt($receipt)
                 ->setStatus(self::STATUS_NEW)
                 ->setExpireAt($expireAt);
+
         } else {
             $subscription = $subscription
                 ->setStatus(self::STATUS_RENEWED);
+
         }
 
         $subscription
@@ -151,7 +153,7 @@ class Subscription extends BaseModel
 
     public function getExpireAt(): Carbon
     {
-        return $this->{self::COLUMN_EXPIRE_AT};
+        return Carbon::parse($this->{self::COLUMN_EXPIRE_AT});
     }
     public function setExpireAt(Carbon $value): self
     {

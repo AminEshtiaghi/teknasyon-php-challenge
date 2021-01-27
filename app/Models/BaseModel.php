@@ -57,8 +57,16 @@ abstract class BaseModel extends Model
 
         });
 
-        if ($result === self::CACHED_NULL_VALUE && $throwException) {
-            throw new NotFoundException($clientToken);
+        if ($result === self::CACHED_NULL_VALUE) {
+
+            if ($throwException) {
+                throw new NotFoundException($clientToken);
+
+            } else {
+                return null;
+
+            }
+
         }
 
         return $result;
