@@ -20,7 +20,7 @@ You can see this application data model via following link on draw.io.
 #### Running Application
 You will be able to run this application with 2 different method of:
 - using **Docker**
-- using **artisan** (server)
+- using **artisan** (serve)
 
 Before starting each of these two method, you should run ``composer install`` and then:
 
