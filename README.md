@@ -38,9 +38,9 @@ The bash code has been written in the way to run migrate command immediately aft
 ###### Configuring .env
 Since current `.env` file is configured in order to use by dockers, it is needed to doing some changes in following configuration as will be described in next lines:
 
-STORE_APPLE_HOST="http://localhost:8000/"
-STORE_GOOGLE_HOST="http://localhost:8000/"
-THIRD_PARTY_HOST="http://localhost:8000/"
+STORE_APPLE_HOST="http://localhost:8000/"<br />
+STORE_GOOGLE_HOST="http://localhost:8000/"<br />
+THIRD_PARTY_HOST="http://localhost:8000/"<br />
 
 Also, there is need to change database configuration which will be described in the next paragraph.
 
