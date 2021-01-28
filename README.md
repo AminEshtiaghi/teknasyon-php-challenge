@@ -12,7 +12,7 @@ Also, this application contains a **worker** which is responsible to extend subs
 
 The other feature of this applications is the **events** part which are responsible to inform a third party whenever each one of devices **subscribe**(new) or **extend**(renew) their subscription or even **cancel** it.
 
-Finally, there is an API in order to represent a report over to present final status of all subscription in following status of "**New**", "**Expired**" and "**Renewed**".
+Finally, there is an API in order to represent a report to present final status of all subscription in following status of "**New**", "**Expired**" and "**Renewed**".
 
 #### Data Models
 You can see this application data model by checking schemas.drawio file which is located in `public` directory:
