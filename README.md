@@ -150,6 +150,8 @@ else do this:
 
 ***Please Note*** that in production a cron job will run laravel scheduler each minutes and a supervisor service will consume all the queued items automatically, so running previous command is only for the test purposes.
 
+Also, Since this is a test, I did not change the queue names, because of difficulty to run consumer and setting queue names on that. so I just used `default` queue name but for sure in a real application setting different name in order to create the priority over running them is a must.
+
 #### REPORTING
 To have simple report, you use following link to see the report result in a json format, please note that the results are cached for 1 minutes, so it means you will have 1 minute dirty data on each request of report end-point.
 

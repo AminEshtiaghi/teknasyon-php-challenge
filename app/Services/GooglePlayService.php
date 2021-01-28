@@ -20,7 +20,7 @@ class GooglePlayService extends BaseStoreService implements IStoreService
 
         return [
             'result' => $result['result'],
-            'expiration' => Carbon::parse($result['expiration']),
+            'expiration' => $result['result']? Carbon::parse($result['expiration']): null,
         ];
     }
 }

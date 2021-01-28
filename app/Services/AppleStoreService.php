@@ -20,7 +20,7 @@ class AppleStoreService extends BaseStoreService implements IStoreService
 
         return [
             'result' => $result['result'],
-            'expiration' => Carbon::parse($result['expiration'])->setTimezone(self::UTC),
+            'expiration' => $result['result']? Carbon::parse($result['expiration'])->setTimezone(self::UTC): null,
         ];
     }
 }
