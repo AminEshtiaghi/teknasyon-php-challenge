@@ -136,7 +136,7 @@ abstract class BaseModel extends Model
         }
     }
 
-    public function getRelatedCacheKeys(): array
+    protected function getRelatedCacheKeys(): array
     {
         return [];
     }

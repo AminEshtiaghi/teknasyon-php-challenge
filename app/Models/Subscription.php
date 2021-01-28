@@ -32,87 +32,6 @@ class Subscription extends BaseModel
         self::STATUS_CANCELED => self::STATUS_CANCELED,
     ];
 
-    /**
-     * @param Device $device
-     * @param string $receipt
-     * @return Subscription|null
-     * @throws NotFoundException|RateLimitException
-     */
-    public static function verify(Device $device, string $receipt): ?self
-    {
-        $subscription = null;
-
-        $result = $device->verify($receipt);
-
-        $isSucceed = $result['result'];
-        $expiration = null;
-
-        if ($isSucceed) {
-            $expiration = $result['expiration'];
-            $subscription = Subscription::registerSubscription($device->getClientToken(), $receipt, $expiration);
-        }
-
-        return $subscription;
-    }
-
-    /**
-     * @throws NotFoundException|RateLimitException
-     */
-    public function renew()
-    {
-        $device = $this->getDevice();
-        $result = $device->verify($this->getReceipt());
-
-        $isSucceed  = $result['result'];
-        $expiration = null;
-
-        if ($isSucceed) {
-            $expiration = $result['expiration'];
-            $status     = self::STATUS_RENEWED;
-
-        } else {
-            $expiration = $this->getExpireAt();
-            $status     = self::STATUS_EXPIRED;
-
-        }
-
-        $this
-            ->setStatus($status)
-            ->setExpireAt($expiration)
-            ->save();
-    }
-
-    /**
-     * @param string $clientToken
-     * @param string $receipt
-     * @param Carbon $expireAt
-     * @return Subscription
-     * @throws NotFoundException
-     */
-    public static function registerSubscription(string $clientToken, string $receipt, Carbon $expireAt): Subscription
-    {
-        $subscription = Subscription::getByClientToken($clientToken, false);
-
-        if ($subscription === null) {
-            $subscription = new Subscription();
-            $subscription = $subscription
-                ->setClientToken($clientToken)
-                ->setReceipt($receipt)
-                ->setStatus(self::STATUS_NEW)
-                ->setExpireAt($expireAt);
-
-        } else {
-            $subscription = $subscription
-                ->setStatus(self::STATUS_RENEWED);
-
-        }
-
-        $subscription
-            ->save();
-
-        return $subscription;
-    }
-
     public function getClientToken(): string
     {
         return $this->{self::COLUMN_CLIENT_TOKEN};
@@ -162,15 +81,7 @@ class Subscription extends BaseModel
         return $this;
     }
 
-    protected static function getByClientTokenFromDB(string $clientToken): ?self
-    {
-        return (new Subscription())
-            ->where(Subscription::COLUMN_CLIENT_TOKEN, '=', $clientToken)
-            ->orderBy(Subscription::COLUMN_ID)
-            ->first();
-    }
-
-    public function getRelatedCacheKeys(): array
+    protected function getRelatedCacheKeys(): array
     {
         return [
             self::getCacheKey(
@@ -180,6 +91,96 @@ class Subscription extends BaseModel
                 ]
             ),
         ];
+    }
+
+    protected static function getByClientTokenFromDB(string $clientToken): ?self
+    {
+        return (new Subscription())
+            ->where(Subscription::COLUMN_CLIENT_TOKEN, '=', $clientToken)
+            ->orderBy(Subscription::COLUMN_ID)
+            ->first();
+    }
+
+    /**
+     * @param Device $device
+     * @param string $receipt
+     * @return Subscription|null
+     * @throws NotFoundException|RateLimitException
+     */
+    public static function verify(Device $device, string $receipt): ?self
+    {
+        $subscription = null;
+
+        $result = $device-> verify($receipt);
+
+        $isSucceed = $result['result'];
+        $expiration = null;
+
+        if ($isSucceed) {
+            $expiration = $result['expiration'];
+            $subscription = self::registerSubscription($device->getClientToken(), $receipt, $expiration);
+        }
+
+        return $subscription;
+    }
+
+    /**
+     * @throws NotFoundException|RateLimitException
+     */
+    public function renew()
+    {
+        $device = $this->getDevice();
+        $result = $device->verify($this->getReceipt());
+
+        $isSucceed  = $result['result'];
+        $expiration = null;
+
+        if ($isSucceed) {
+            $expiration = $result['expiration'];
+            $status     = self::STATUS_RENEWED;
+
+        } else {
+            $expiration = $this->getExpireAt();
+            $status     = self::STATUS_EXPIRED;
+
+        }
+
+        $this
+            ->setStatus($status)
+            ->setExpireAt($expiration)
+            ->save();
+    }
+
+    /**
+     * @param string $clientToken
+     * @param string $receipt
+     * @param Carbon $expireAt
+     * @return Subscription
+     * @throws NotFoundException
+     */
+    private static function registerSubscription(string $clientToken, string $receipt, Carbon $expireAt): Subscription
+    {
+        $subscription = Subscription::getByClientToken($clientToken, false);
+
+        if ($subscription === null) {
+            $subscription = new Subscription();
+            $subscription = $subscription
+                ->setClientToken($clientToken)
+                ->setReceipt($receipt)
+                ->setStatus(self::STATUS_NEW)
+                ->setExpireAt($expireAt);
+
+        } else {
+            $subscription = $subscription
+                ->setStatus(self::STATUS_RENEWED)
+                ->setExpireAt($expireAt);
+
+        }
+
+        $subscription
+            ->save();
+
+        return $subscription;
     }
 
     protected function onCreating(BaseModel $baseModel)

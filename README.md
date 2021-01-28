@@ -15,7 +15,8 @@ The other feature of this applications is the **events** part which are responsi
 Finally, there is an API in order to represent a report over to present final status of all subscription in following status of "**New**", "**Expired**" and "**Renewed**".
 
 #### Data Models
-You can see this application data model via following link on draw.io.
+You can see this application data model by checking schemas.drawio file which is located in `public` directory:
+- [http://localhost:8000/schemas.drawio](http://localhost:8000/schemas.drawio)
 
 #### Running Application
 You will be able to run this application with 2 different method of:
@@ -34,19 +35,27 @@ The bash code has been written in the way to run migrate command immediately aft
 ``bash destroy.sh`` 
 
 ##### Using Artisan
+###### Configuring .env
+Since current `.env` file is configured in order to use by dockers, it is needed to doing some changes in following configuration as will be described in next lines:
+
+STORE_APPLE_HOST="http://localhost:8000/"
+STORE_GOOGLE_HOST="http://localhost:8000/"
+THIRD_PARTY_HOST="http://localhost:8000/"
+
+Also, there is need to change database configuration which will be described in the next paragraph.
+
 ###### Create Database
 Firstly, it is needed to create a database exactly based on .env file configuration file.
 - Database name: teknasyon
 - Database username: root
 - Database password: docker
 
-(you can change these configuration files and use the values you prefer).
+(you can change these configuration files and use the values you prefer in `.env` file).
 
 ###### Migrate Database
 Secondly, you should run following command in order to have the database ready to work before running your web engine.
 
 ``php artisan migrate``
-
 
 ###### Serve Web Engine
 Finally, you can serve the web engine by running following command in the terminal:

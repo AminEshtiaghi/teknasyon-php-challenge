@@ -26,6 +26,76 @@ class Device extends BaseModel
         self::OS_ANDROID => self::OS_ANDROID,
     ];
 
+    public function getClientToken(): string
+    {
+        return $this->{self::COLUMN_CLIENT_TOKEN};
+    }
+    public function setClientToken(string $value): self
+    {
+        $this->{self::COLUMN_CLIENT_TOKEN} = $value;
+        return $this;
+    }
+
+    public function getUId(): int
+    {
+        return $this->{self::COLUMN_U_ID};
+    }
+    public function setUId(int $value): self
+    {
+        $this->{self::COLUMN_U_ID} = $value;
+        return $this;
+    }
+
+    public function getAppId(): int
+    {
+        return $this->{self::COLUMN_APP_ID};
+    }
+    public function setAppId(int $value): self
+    {
+        $this->{self::COLUMN_APP_ID} = $value;
+        return $this;
+    }
+
+    public function getLanguage(): string
+    {
+        return $this->{self::COLUMN_LANG};
+    }
+    public function setLanguage(string $value): self
+    {
+        $this->{self::COLUMN_LANG} = $value;
+        return $this;
+    }
+
+    public function getOS(): string
+    {
+        return $this->{self::COLUMN_OS};
+    }
+    public function setOS(string $value): self
+    {
+        $this->{self::COLUMN_OS} = $value;
+        return $this;
+    }
+
+    protected function getRelatedCacheKeys(): array
+    {
+        return [
+            self::getCacheKey(
+                [
+                    'token',
+                    $this->getClientToken(),
+                ]
+            ),
+        ];
+    }
+
+    protected static function getByClientTokenFromDB(string $clientToken): ?self
+    {
+        return (new Device())
+            ->where(Device::COLUMN_CLIENT_TOKEN, '=', $clientToken)
+            ->orderBy(Device::COLUMN_ID)
+            ->first();
+    }
+
     /**
      * @param int $uId
      * @param int $appId
@@ -65,76 +135,6 @@ class Device extends BaseModel
             ->exists();
     }
 
-    public function setOS(string $value): self
-    {
-        $this->{self::COLUMN_OS} = $value;
-        return $this;
-    }
-
-    public function setLanguage(string $value): self
-    {
-        $this->{self::COLUMN_LANG} = $value;
-        return $this;
-    }
-
-    public function setAppId(int $value): self
-    {
-        $this->{self::COLUMN_APP_ID} = $value;
-        return $this;
-    }
-
-    public function setUId(int $value): self
-    {
-        $this->{self::COLUMN_U_ID} = $value;
-        return $this;
-    }
-
-    public function setClientToken(string $value): self
-    {
-        $this->{self::COLUMN_CLIENT_TOKEN} = $value;
-        return $this;
-    }
-
-    protected static function getByClientTokenFromDB(string $clientToken): ?self
-    {
-        return (new Device())
-            ->where(Device::COLUMN_CLIENT_TOKEN, '=', $clientToken)
-            ->orderBy(Device::COLUMN_ID)
-            ->first();
-    }
-
-    public function getUId(): int
-    {
-        return $this->{self::COLUMN_U_ID};
-    }
-
-    public function getAppId(): int
-    {
-        return $this->{self::COLUMN_APP_ID};
-    }
-
-    public function getLanguage(): string
-    {
-        return $this->{self::COLUMN_LANG};
-    }
-
-    public function getRelatedCacheKeys(): array
-    {
-        return [
-            self::getCacheKey(
-                [
-                    'token',
-                    $this->getClientToken(),
-                ]
-            ),
-        ];
-    }
-
-    public function getClientToken(): string
-    {
-        return $this->{self::COLUMN_CLIENT_TOKEN};
-    }
-
     /**
      * @param string $receipt
      * @return array
@@ -153,10 +153,5 @@ class Device extends BaseModel
         }
 
         return (new GooglePlayService());
-    }
-
-    public function getOS(): string
-    {
-        return $this->{self::COLUMN_OS};
     }
 }
